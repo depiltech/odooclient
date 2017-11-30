@@ -107,6 +107,12 @@ class OdooClient
     private static $_product_id_change = 'product_id_change';
 
     /**
+     * Odoo XML-RPC _onchange_product_id method
+     * @var string $_onchange_product_id
+     */
+    private static $_onchange_product_id = '_onchange_product_id';
+
+    /**
      * Connection host
      * @var string $_host
      */
@@ -544,6 +550,27 @@ class OdooClient
         $msg = $this->_createMessageHeader();
         $msg->addParam(new xmlrpcval($model, xmlrpcval::$xmlrpcString));
         $msg->addParam(new xmlrpcval(self::$_product_id_change, xmlrpcval::$xmlrpcString));
+        $msg->addParam(new xmlrpcval($ids, xmlrpcval::$xmlrpcArray));
+
+        $response = $this->_connection->create(self::$_object)->send($msg);
+        $response = $this->_checkResponse($response);
+        $response = $this->_transform->toArray($response);
+
+        return $response;
+    }
+
+    /**
+     * Odoo XML-RPC _onchange_product_id method
+     * @param string $model Odoo model name
+     * @param array $ids Data IDs
+     * @return array|xmlrpcresp|\PhpXmlRpc\Response[] Odoo XML-RPC response
+     * @throws \Exception Throws exception when request fail
+     */
+    public function _onchange_product_id($model, array $ids)
+    {
+        $msg = $this->_createMessageHeader();
+        $msg->addParam(new xmlrpcval($model, xmlrpcval::$xmlrpcString));
+        $msg->addParam(new xmlrpcval(self::$_onchange_product_id, xmlrpcval::$xmlrpcString));
         $msg->addParam(new xmlrpcval($ids, xmlrpcval::$xmlrpcArray));
 
         $response = $this->_connection->create(self::$_object)->send($msg);
